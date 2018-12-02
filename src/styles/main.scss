@@ -1,0 +1,46 @@
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  font: 500 10px 'Wt-Position', sans-serif;
+
+  background: #000;
+  color: #fff;
+
+  #divActive {
+    position: fixed;
+    left: 8px;
+    bottom: 248px;
+  }
+
+  #divMidi {
+    position: fixed;
+    left: 8px;
+    bottom: 248px;
+  }
+
+  #divPath {
+    position: fixed;
+    right: 8px;
+    bottom: 248px;
+
+    text-align: right;
+  }
+
+  #divAutomaton {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 240px;
+  }
+
+  #canvas {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+  }
+}
