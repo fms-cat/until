@@ -31,7 +31,7 @@ void main() {
   );
 
   // == special chars ==========================================================
-  if ( col.w == 256.0 ) { // Ā
+  if ( col.w == 3.0 ) { // ♥
     float wave = 0.5 + 0.5 * sin( 10.0 * pos.x + 10.0 * time );
     col = vec4( mix(
       col.xyz,
@@ -39,7 +39,7 @@ void main() {
       wave
     ), 3.0 );
     vSize *= 1.0 + 0.5 * wave;
-  } else if ( col.w == 257.0 ) { // ā
+  } else if ( col.w == 14.0 ) { // 音
     float b = exp( -5.0 * mod( mod( time, 2.0 beat ), 0.75 beat ) );
     col = vec4( mix(
       col.xyz,
@@ -47,7 +47,7 @@ void main() {
       kickBeat
     ), 14.0 );
     vSize *= 1.0 + kickBeat;
-  } else if ( col.w == 258.0 ) { // Ă
+  } else if ( col.w == 2.0 ) { // 顔
     col = vec4( mix(
       vec3( 1.1, 0.5, 0.1 ),
       vec3( 0.7, 1.4, 0.3 ),

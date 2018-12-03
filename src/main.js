@@ -2,7 +2,7 @@
 import { Audio } from './audio.js';
 import { Xorshift } from './libs/xorshift';
 import GLCat from './libs/glcat.js';
-import GLCatPath from './libs/glcat-path-gui';
+import GLCatPath from './libs/glcat-path';
 import MathCat from './libs/mathcat.js';
 import * as UltraCat from './libs/ultracat.js';
 import Automaton from '@fms-cat/automaton';
@@ -15,9 +15,18 @@ document.body.style.padding = 0;
 
 const canvas = document.createElement( 'canvas' );
 document.body.appendChild( canvas );
-document.body.style.display = 'fixed';
+canvas.style.position = 'fixed';
+canvas.style.left = '0';
+canvas.style.top = '0';
 document.body.style.width = canvas.style.width = '100%';
 document.body.style.height = canvas.style.height = '100%';
+
+canvas.onclick = () => {
+  if ( document.body.requestFullscreen ) { document.body.requestFullscreen(); }
+  else if ( document.body.webkitRequestFullscreen ) { document.body.webkitRequestFullscreen(); }
+  else if ( document.body.mozRequestFullscreen ) { document.body.mozRequestFullscreen(); }
+  automaton.seek( 0.0 );
+};
 
 const divPath = document.createElement( 'div' );
 document.body.appendChild( divPath );
@@ -114,9 +123,22 @@ automaton.on( 'seek', () => {
   zOffset[ 0 ] = 0.0;
 } );
 
+automaton.addFxDefinition( 'sine', {
+  name: 'Sinewave',
+  params: {
+    amp: { name: 'Amp', type: 'float', default: 0.1 },
+    freq: { name: 'Frequency', type: 'float', default: 5.0 },
+    phase: { name: 'Phase', type: 'float', default: 0.0, min: 0.0, max: 1.0 }
+  },
+  func( context ) {
+    const v = context.v;
+    const p = context.progress * context.params.freq + context.params.phase;
+    return v + context.params.amp * Math.sin( p * Math.PI * 2.0 );
+  }
+} );
+
 automaton.addFxDefinition( 'repeat', {
   name: 'Repeat',
-  description: 'I stole best animation curve feature from AfterEffects',
   params: {
     duration: { name: 'Duration', type: 'float', default: 1.0, min: 0.0 }
   },
@@ -527,7 +549,17 @@ const update = () => {
 
   glCatPath.render( 'glitch', {
     enable: beat2time( 16.0 ) < automaton.time,
-    input: glCatPath.fb( 'fxaa' ).texture
+    input: (
+      automaton.time < beat2time( 234.0 ) ? glCatPath.fb( 'fxaa' ).texture :
+      automaton.time < beat2time( 234.5 ) ? glCatPath.fb( 'render' ).texture :
+      automaton.time < beat2time( 235.5 ) ? glCatPath.fb( 'fxaa' ).texture :
+      automaton.time < beat2time( 236.0 ) ? glCatPath.fb( 'distance' ).texture :
+      automaton.time < beat2time( 237.5 ) ? glCatPath.fb( 'fxaa' ).texture :
+      automaton.time < beat2time( 238.0 ) ? glCatPath.fb( 'target' ).textures[ 0 ] :
+      automaton.time < beat2time( 238.5 ) ? glCatPath.fb( 'fxaa' ).texture :
+      automaton.time < beat2time( 239.0 ) ? glCatPath.fb( 'target' ).textures[ 1 ] :
+      glCatPath.fb( 'fxaa' ).texture
+    )
   } );
 
   glCatPath.render( 'return', {
@@ -556,7 +588,7 @@ const update = () => {
     log.info( `Rendering resolution: ${width}x${height}` );
     log.info( `Audio buffer size: ${audio.bufferSize}` );
     log.info( '- - - - - - - - - - - - - - -' );
-    log.info( 'Ā Ā Ā Welcome to TDF2018 Ā Ā Ā' );
+    log.info( '\u0003 \u0003 \u0003 Welcome to TDF2018 \u0003 \u0003 \u0003' );
     log.info( 'You are experiencing ...' );
     log.info( '' );
     log.color( [ 1.3, 2.4, 0.2 ] );
@@ -574,11 +606,11 @@ const update = () => {
 
   doAt( beat2time( 80.0 ), () => {
     log.info( 'Trails activated' );
-    log.info( 'ā Do you like acid bass? ā' );
+    log.info( '\u000E Do you like acid bass? \u000E' );
   } );
 
   doAt( beat2time( 144.0 ), () => {
-    log.info( 'Entering chill phase...' );
+    log.info( 'Entering a section called "ITS_BEGINNING"' );
     log.info( 'Tips: The log is implemented in...' );
     log.info( '29 Nov 2018 (3 days before the deadline)' );
     log.warn( `Now it's ${ new Date().toLocaleTimeString() }... End of party is approaching` );
@@ -617,10 +649,48 @@ const update = () => {
     log.info( 'I\'m so proud of this 909Snare' );
   } );
 
+  doAt( beat2time( 304.0 ), () => {
+    log.info( 'Something weird activated' );
+    log.info( 'Greetings, pals :' );
+  } );
+  [
+    '0x4015',
+    'Ctrl-Alt-Test',
+    'fsqrt',
+    'gam0022',
+    'gaz',
+    'gyabo',
+    'Had2Apps',
+    'Jugem-T',
+    'notargs',
+    'Radium Software',
+    'RTX1911',
+    'soma_arc',
+    'System K',
+    'toe on net',
+  ].forEach( ( v, i ) => {
+    doAt( beat2time( 306.0 + 2.0 * i ), () => {
+      log.info( `\u0002 Hi, ${v} !!` );
+    } );
+  } );
+
+  doAt( beat2time( 336.0 ), () => {
+    log.info( 'Also I really want to shoutout to :' );
+  } );
+  [
+    'NotITG Community (esp. Frums and Taro)',
+    'Live Coding & VJ Community',
+    'of course, TDF Community',
+  ].forEach( ( v, i ) => {
+    doAt( beat2time( 338.0 + 2.0 * i ), () => {
+      log.info( `\u0003 I love you, ${v} !!` );
+    } );
+  } );
+
   doAt( beat2time( 368.0 ), () => {
     log.info( 'I made this prod within 1 weeks, forgive me' );
     log.info( '== Here is the end of this demo ==' );
-    log.info( '==   Thanks all, I love you Ā   ==' );
+    log.info( '==   Thanks all, I love you \u0003   ==' );
   } );
 
   // == end ====================================================================

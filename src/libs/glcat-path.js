@@ -115,6 +115,13 @@ let Path = class {
     }
   }
 
+  renderOutsideOfPipeline( name, params ) {
+    this.render( name, params );
+  }
+
+  begin() {}
+  end() {}
+
   replaceProgram( name, vert, frag ) {
     const path = this.paths[ name ];
     if ( !path ) { throw 'GLCat-Path: The path called ' + name + ' is not defined!'; }

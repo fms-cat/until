@@ -85,5 +85,5 @@ void main() {
 
   gl_FragData[ 0 ] = vec4( vPos, 1.0 );
   gl_FragData[ 1 ] = vec4( 0.0, 0.0, 1.0, 1.0 );
-  gl_FragData[ 2 ] = vec4( 1.7, 0.9, 2.0, 4.0 );
+  gl_FragData[ 2 ] = vec4( 1.7, 0.8, 1.1, 2.0 );
 }

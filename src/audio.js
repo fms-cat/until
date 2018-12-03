@@ -9,7 +9,7 @@ export const Audio = class {
     this.bufferSize = 2048;
     this.processor = this.audio.createScriptProcessor( this.bufferSize, 2, 2 );
     this.processor.onaudioprocess = ( event ) => this.onprocess( event );
-    this.bufferPoolSize = 512;
+    this.bufferPoolSize = 64;
     this.bufferPoolIndex = 0;
     this.bufferPool = new Float32Array( 4 * this.bufferSize * this.bufferPoolSize );
     this.analyserData = new Float32Array( 2048 );

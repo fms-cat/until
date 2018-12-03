@@ -25,7 +25,7 @@ log.print = ( mes ) => {
   for ( let i = 0; i < mes.length; i ++ ) {
     logBuffer.push( [
       logPosition.concat(),
-      logColor.concat( [ mes.charCodeAt( i ) ] )
+      logColor.concat( [ mes.codePointAt( i ) ] )
     ] );
     logPosition[ 0 ] += 0.1;
   }

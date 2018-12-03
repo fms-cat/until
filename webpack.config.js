@@ -20,7 +20,7 @@ module.exports = ( env, argv ) => {
       alias: {
         '@fms-cat/automaton': (
           argv.mode === 'production'
-            ? __dirname + '/node_modules/@fms-cat/automaton/dist/automaton.nogui.js'
+            ? __dirname + '/src/automaton.fuckyou.js'
             : '@fms-cat/automaton'
         )
       }
