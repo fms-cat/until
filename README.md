@@ -10,14 +10,14 @@ Heavily relied on [Automaton](https://github.com/FMS-Cat/automaton), my own anim
 ## Run
 
 - Production build (It's 64K HTML!)
-  - [1920x1080](./dist/out.png.html#1920x1080)
-  - [1280x720](./dist/out.png.html#1280x720)
-  - [640x360](./dist/out.png.html#640x360)
+  - [1920x1080](https://fms-cat.github.io/until/dist/out.png.html#1920x1080)
+  - [1280x720](https://fms-cat.github.io/until/dist/out.png.html#1280x720)
+  - [640x360](https://fms-cat.github.io/until/dist/out.png.html#640x360)
 
 - Development build (feat. Automaton GUI and Pass inspector!!)
-  - [1920x1080](./dist/index.html#1920x1080)
-  - [1280x720](./dist/index.html#1280x720)
-  - [640x360](./dist/index.html#640x360)
+  - [1920x1080](https://fms-cat.github.io/until/dist/index.html#1920x1080)
+  - [1280x720](https://fms-cat.github.io/until/dist/index.html#1280x720)
+  - [640x360](https://fms-cat.github.io/until/dist/index.html#640x360)
 
 ## Links
 
