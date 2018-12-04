@@ -21,9 +21,10 @@ Heavily relied on [Automaton](https://github.com/FMS-Cat/automaton), my own anim
 
 ## Links
 
-- [🎥 YouTube, Captured stream]()
-- [🔦 Pouet, Prod page]()
-- [🐔 Twitter (@FMS_Cat), follow me!]()
+- [🔦 Pouet, Prod page](https://www.pouet.net/prod.php?which=79365)
+- [🎥 YouTube, Captured stream](https://www.youtube.com/watch?v=XYFGjFPrLIk)
+- [💻 Source code (GitHub)](https://github.com/FMS-Cat/until)
+- [🐔 Twitter (@FMS_Cat), follow me!](https://twitter.com/FMS_Cat)
 
 ## License
 
