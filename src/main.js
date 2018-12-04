@@ -53,6 +53,7 @@ if ( !PRODUCTION ) {
   window.divAutomaton = document.createElement( 'divAutomaton' );
   document.body.appendChild( window.divAutomaton );
   window.divAutomaton.style.position = 'fixed';
+  window.divAutomaton.style.textAlign = 'right';
   window.divAutomaton.style.width = '100%';
   window.divAutomaton.style.height = '240px';
   window.divAutomaton.style.right = 0;
