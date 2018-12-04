@@ -9,7 +9,7 @@ export const Audio = class {
     this.bufferSize = 2048;
     this.processor = this.audio.createScriptProcessor( this.bufferSize, 2, 2 );
     this.processor.onaudioprocess = ( event ) => this.onprocess( event );
-    this.bufferPoolSize = 64;
+    this.bufferPoolSize = 2048;
     this.bufferPoolIndex = 0;
     this.bufferPool = new Float32Array( 4 * this.bufferSize * this.bufferPoolSize );
     this.analyserData = new Float32Array( 2048 );
@@ -18,7 +18,7 @@ export const Audio = class {
     this.processor.connect( this.audio.destination );
     this.processor.connect( this.analyser );
 
-    this.isPlaying = true;
+    this.isPlaying = false;
     this.currentTime = 0;
     this.currentTimeDate = Date.now();
 
@@ -89,10 +89,14 @@ export const Audio = class {
   play() {
     this.isPlaying = true;
     this.currentTimeDate = Date.now();
+    this.processor.connect( this.audio.destination );
+    this.processor.connect( this.analyser );
   }
 
   pause() {
     this.isPlaying = false;
+    this.processor.disconnect( this.audio.destination );
+    this.processor.disconnect( this.analyser );
   }
 
   setTime( time ) {
@@ -102,7 +106,7 @@ export const Audio = class {
   }
 
   getTime() {
-    let time = this.currentTime - this.bufferSize / this.sampleRate;
+    let time = this.currentTime;
     if ( this.isPlaying ) {
       time += ( Date.now() - this.currentTimeDate ) / 1000.0;
     }
@@ -118,40 +122,32 @@ export const Audio = class {
     const outL = event.outputBuffer.getChannelData( 0 );
     const outR = event.outputBuffer.getChannelData( 1 );
 
-    if ( this.isPlaying ) {
-      const glCatPath = this.glCatPath;
-      const gl = this.gl;
+    const glCatPath = this.glCatPath;
+    const gl = this.gl;
 
-      if ( this.bufferPoolIndex === 0 ) {
-        glCatPath.renderOutsideOfPipeline( 'audio', {
-          time: this.currentTime,
-        } );
+    this.currentTime += this.bufferSize / this.sampleRate;
+    this.currentTimeDate = Date.now();
 
-        gl.readPixels(
-          0, // x
-          0, // y
-          this.bufferSize, // width
-          this.bufferPoolSize, // height
-          gl.RGBA, // format
-          gl.FLOAT, // type
-          this.bufferPool // dst
-        );
-      }
+    if ( this.bufferPoolIndex === 0 ) {
+      glCatPath.renderOutsideOfPipeline( 'audio', {
+        time: this.currentTime,
+      } );
 
-      for ( let i = 0; i < this.bufferSize; i ++ ) {
-        outL[ i ] = this.bufferPool[ this.bufferPoolIndex + i * 4 ];
-        outR[ i ] = this.bufferPool[ this.bufferPoolIndex + i * 4 + 1 ];
-      }
-      this.bufferPoolIndex = ( this.bufferPoolIndex + 4 * this.bufferSize ) % ( 4 * this.bufferSize * this.bufferPoolSize );
-
-      this.currentTime += this.bufferSize / this.sampleRate;
-      this.currentTimeDate = Date.now();
-    } else {
-      for ( let i = 0; i < this.bufferSize; i ++ ) {
-        outL[ i ] = 0.0;
-        outR[ i ] = 0.0;
-      }
-
+      gl.readPixels(
+        0, // x
+        0, // y
+        this.bufferSize, // width
+        this.bufferPoolSize, // height
+        gl.RGBA, // format
+        gl.FLOAT, // type
+        this.bufferPool // dst
+      );
     }
+
+    for ( let i = 0; i < this.bufferSize; i ++ ) {
+      outL[ i ] = this.bufferPool[ this.bufferPoolIndex + i * 4 ];
+      outR[ i ] = this.bufferPool[ this.bufferPoolIndex + i * 4 + 1 ];
+    }
+    this.bufferPoolIndex = ( this.bufferPoolIndex + 4 * this.bufferSize ) % ( 4 * this.bufferSize * this.bufferPoolSize );
   }
 };

@@ -3,9 +3,9 @@
 
 #define TRACE_ITER 1
 #define MARCH_MUL 0.8
-#define MARCH_ITER 80
+#define MARCH_ITER 60
 #define RAYLEN_INIT 0.01
-#define INTERSECT_MIN 0.001
+#define INTERSECT_MIN 0.01
 #define MARCH_FAR 20.0
 #define FOV 90.0
 
@@ -162,12 +162,12 @@ void main() {
     rayLen += dist * MARCH_MUL;
     rayPos = ray.ori + ray.dir * rayLen;
 
-    if ( dist < INTERSECT_MIN ) { break; }
+    if ( abs( dist ) < INTERSECT_MIN ) { break; }
     if ( MARCH_FAR < dist ) { break; }
   }
 
   vec3 normal = vec3( 0.0 );
-  if ( dist < INTERSECT_MIN ) {
+  if ( abs( dist ) < INTERSECT_MIN ) {
     normal = normalFunc( rayPos, 1E-4 );
 
     float z = dot( normalize( cameraTar - cam.pos ), rayPos - cam.pos );

@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "go": "webpack-dev-server --hot --mode development",
-    "fuck": "webpack --mode production",
+    "fuck": "webpack --mode development && webpack --mode production && ruby pnginator.rb ./dist/bundle.prod.js ./dist/out.png.html",
     "h": "http-server dist"
   },
   "devDependencies": {

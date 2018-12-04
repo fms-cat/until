@@ -49,7 +49,7 @@ export default ( context ) => {
         glCat.attribute( 'p', vboQuad, 2 );
 
         for ( let i = 0; i < 3; i ++ ) {
-          let gaussVar = [ 3.0, 10.0, 50.0 ][ i ];
+          let gaussVar = [ 0.003, 0.01, 0.05 ][ i ] * height;
           glCat.uniform1f( 'var', gaussVar );
 
           gl.bindFramebuffer( gl.FRAMEBUFFER, path.tempFb.framebuffer );

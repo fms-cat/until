@@ -1,8 +1,30 @@
-# Everyday One Motion - 20181026  
+# Until  
 
-"DeltaTime Multiplier x0.0"  
+"Until" by FMS_Cat  
+64KB WebGL Intro  
+2nd Place @ [Tokyo Demo Fest 2018](http://tokyodemofest.jp/2018/), Combined Demo Compo  
+Heavily relied on [Automaton](https://github.com/FMS-Cat/automaton), my own animation engine  
 
-![](https://i.imgur.com/OHXQGit.gif)  
 
-[Twitter](https://twitter.com/motions_work/status/1055848684410159109)  
-[Run on web](http://fms-cat-eom.github.io/20181026/dist)  
+
+## Run
+
+- Production build (It's 64K HTML!)
+  - [1920x1080](./dist/out.png.html#1920x1080)
+  - [1280x720](./dist/out.png.html#1280x720)
+  - [640x360](./dist/out.png.html#640x360)
+
+- Development build
+  - [1920x1080](./dist/index.html#1920x1080)
+  - [1280x720](./dist/index.html#1280x720)
+  - [640x360](./dist/index.html#640x360)
+
+## Links
+
+- [🎥 YouTube, Captured stream]()
+- [🔦 Pouet, Prod page]()
+- [🐔 Twitter (@FMS_Cat), follow me!]()
+
+## License
+
+MIT

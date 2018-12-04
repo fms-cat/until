@@ -2,7 +2,7 @@
 
 #define FOG_ONE calcDepth(5.0)
 #define FOG_ZERO calcDepth(20.0)
-#define BOKEH_ITER 20
+#define BOKEH_ITER 10
 #define BOKEH_ANGLE 2.39996
 #define BOKEH_RADIUS_MAX (resolution.x / 64.0)
 

@@ -2,6 +2,7 @@
 
 const path = require( 'path' );
 
+const webpack = require( 'webpack' );
 const HtmlWebpackPlugin = require( 'html-webpack-plugin' );
 
 module.exports = ( env, argv ) => {
@@ -10,7 +11,11 @@ module.exports = ( env, argv ) => {
     entry: path.resolve( __dirname, 'src/main.js' ),
     output: {
       path: path.resolve( __dirname, 'dist' ),
-      filename: 'bundle.js'
+      filename: (
+        argv.mode === 'production'
+          ? 'bundle.prod.js'
+          : 'bundle.js'
+      )
     },
     devServer: {
       inline: true,
@@ -20,8 +25,13 @@ module.exports = ( env, argv ) => {
       alias: {
         '@fms-cat/automaton': (
           argv.mode === 'production'
-            ? __dirname + '/src/automaton.fuckyou.js'
+            ? path.resolve( __dirname, 'src/automaton.fuckyou.js' )
             : '@fms-cat/automaton'
+        ),
+        'glcat-path': (
+          argv.mode === 'production'
+            ? path.resolve( __dirname, 'src/libs/glcat-path.js' )
+            : path.resolve( __dirname, 'src/libs/glcat-path-gui.js' )
         )
       }
     },
@@ -35,7 +45,16 @@ module.exports = ( env, argv ) => {
       minimize: argv.mode === 'production'
     },
     plugins: [
-      new HtmlWebpackPlugin()
+      new HtmlWebpackPlugin( {
+        filename: (
+          argv.mode === 'production'
+            ? path.resolve( __dirname, 'dist/index.prod.html' )
+            : path.resolve( __dirname, 'dist/index.html' )
+        )
+      } ),
+      new webpack.DefinePlugin( {
+        PRODUCTION: JSON.stringify( argv.mode === 'production' )
+      } )
     ]
   };
 };

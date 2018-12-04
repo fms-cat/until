@@ -1,8 +1,10 @@
+/* globals PRODUCTION */
+
 // == import various modules / stuff ===========================================
 import { Audio } from './audio.js';
 import { Xorshift } from './libs/xorshift';
 import GLCat from './libs/glcat.js';
-import GLCatPath from './libs/glcat-path';
+import GLCatPath from 'glcat-path';
 import MathCat from './libs/mathcat.js';
 import * as UltraCat from './libs/ultracat.js';
 import Automaton from '@fms-cat/automaton';
@@ -14,39 +16,61 @@ document.body.style.margin = 0;
 document.body.style.padding = 0;
 
 const canvas = document.createElement( 'canvas' );
-document.body.appendChild( canvas );
-canvas.style.position = 'fixed';
-canvas.style.left = '0';
-canvas.style.top = '0';
-document.body.style.width = canvas.style.width = '100%';
-document.body.style.height = canvas.style.height = '100%';
 
-canvas.onclick = () => {
-  if ( document.body.requestFullscreen ) { document.body.requestFullscreen(); }
-  else if ( document.body.webkitRequestFullscreen ) { document.body.webkitRequestFullscreen(); }
-  else if ( document.body.mozRequestFullscreen ) { document.body.mozRequestFullscreen(); }
-  automaton.seek( 0.0 );
-};
+if ( PRODUCTION ) {
+  canvas.style.position = 'fixed';
+  canvas.style.left = '0';
+  canvas.style.top = '0';
+  document.body.style.width = canvas.style.width = '100%';
+  document.body.style.height = canvas.style.height = '100%';
 
-const divPath = document.createElement( 'div' );
-document.body.appendChild( divPath );
+  const button = document.createElement( 'a' );
+  document.body.appendChild( button );
+  button.innerHTML = 'click me!';
 
-const divAutomaton = document.createElement( 'divAutomaton' );
-document.body.appendChild( divAutomaton );
-divAutomaton.style.position = 'fixed';
-divAutomaton.style.width = '100%';
-divAutomaton.style.height = '240px';
-divAutomaton.style.right = 0;
-divAutomaton.style.bottom = 0;
+  button.onclick = () => {
+    document.body.appendChild( canvas );
+    automaton.play();
+    if ( document.body.requestFullscreen ) { document.body.requestFullscreen(); }
+    else if ( document.body.webkitRequestFullscreen ) { document.body.webkitRequestFullscreen(); }
+    else if ( document.body.mozRequestFullscreen ) { document.body.mozRequestFullscreen(); }
+  };
+}
 
-const checkActive = document.createElement( 'input' );
-checkActive.type = 'checkbox';
-checkActive.checked = true;
-document.body.appendChild( checkActive );
+if ( !PRODUCTION ) {
+  document.body.appendChild( canvas );
+  canvas.style.left = '0';
+  canvas.style.top = '0';
+  document.body.style.width = canvas.style.width = '100%';
+
+  window.divPath = document.createElement( 'div' );
+  document.body.appendChild( window.divPath );
+  window.divPath.style.position = 'fixed';
+  window.divPath.style.right = '8px';
+  window.divPath.style.bottom = '248px';
+  window.divPath.style.textShadow = '1px 1px 1px #ffffff';
+
+  window.divAutomaton = document.createElement( 'divAutomaton' );
+  document.body.appendChild( window.divAutomaton );
+  window.divAutomaton.style.position = 'fixed';
+  window.divAutomaton.style.width = '100%';
+  window.divAutomaton.style.height = '240px';
+  window.divAutomaton.style.right = 0;
+  window.divAutomaton.style.bottom = 0;
+
+  window.checkActive = document.createElement( 'input' );
+  document.body.appendChild( window.checkActive );
+  window.checkActive.type = 'checkbox';
+  window.checkActive.checked = true;
+  window.checkActive.style.position = 'fixed';
+  window.checkActive.style.left = '8px';
+  window.checkActive.style.bottom = '248px';
+}
 
 // == gl stuff =================================================================
-let width = canvas.width = CONFIG.resolution[ 0 ];
-let height = canvas.height = CONFIG.resolution[ 1 ];
+const hashReso = location.hash.match( /\d+/g ) || [ 1920, 1080 ];
+let width = canvas.width = parseInt( hashReso[ 0 ] );
+let height = canvas.height = parseInt( hashReso[ 1 ] );
 
 const gl = canvas.getContext( 'webgl' );
 gl.lineWidth( 1 ); // e
@@ -58,7 +82,7 @@ glCat.getExtension( 'EXT_frag_depth', true );
 glCat.getExtension( 'ANGLE_instanced_arrays', true );
 
 const glCatPath = new GLCatPath( glCat, {
-  el: divPath,
+  el: window.divPath,
   canvas: canvas,
   stretch: true,
   drawbuffers: true
@@ -80,6 +104,10 @@ const doAt = ( t, func ) => {
 
 // == wow it's aural contents ==================================================
 const audio = new Audio( { glCatPath } );
+
+if ( !PRODUCTION ) {
+  audio.play();
+}
 
 const beat2time = ( beat ) => beat * 60.0 / 160.0;
 const time2beat = ( beat ) => beat / 60.0 * 160.0;
@@ -111,7 +139,7 @@ let totalFrame = 0;
 let isInitialFrame = true;
 
 const automaton = new Automaton( {
-  gui: divAutomaton,
+  gui: window.divAutomaton,
   data: require( './automaton.json' ),
 } );
 const auto = automaton.auto;
@@ -122,6 +150,10 @@ automaton.on( 'seek', () => {
   audio.setTime( automaton.time );
   zOffset[ 0 ] = 0.0;
 } );
+
+if ( PRODUCTION ) {
+  automaton.pause();
+}
 
 automaton.addFxDefinition( 'sine', {
   name: 'Sinewave',
@@ -344,13 +376,21 @@ require( './paths/very-plane' ).default( context );
 
 // == loop here ================================================================
 const update = () => {
-  automaton.update( audio.getTime() );
-  if ( !checkActive.checked ) {
-    requestAnimationFrame( update );
-    return;
+  if ( PRODUCTION ) {
+    if ( window.aaaaaaaaaaa ) {
+      return;
+    }
+  }
+
+  if ( !PRODUCTION ) {
+    if ( !window.checkActive.checked ) {
+      requestAnimationFrame( update );
+      return;
+    }
   }
 
   // == update bunch of shit ===================================================
+  automaton.update( audio.getTime() );
   zOffset[ 0 ] += auto( 'dzOffset' ) * automaton.deltaTime;
   updateMatrices();
   textureRandomUpdate( textureRandomDynamic, 32 );
@@ -707,11 +747,21 @@ update();
 
 // == keyboard is good =========================================================
 window.addEventListener( 'keydown', ( event ) => {
-  if ( event.which === 27 ) { // panic button
-    checkActive.checked = false;
+  if ( PRODUCTION ) {
+    if ( event.which === 27 ) { // panic button
+      window.aaaaaaaaaaa = true;
+      audio.pause();
+    }
   }
 
-  if ( event.which === 32 ) { // play / pause
-    automaton.isPlaying ? automaton.pause() : automaton.play();
+  if ( !PRODUCTION ) {
+    if ( event.which === 27 ) { // panic button
+      window.checkActive.checked = false;
+      automaton.pause();
+    }
+
+    if ( event.which === 32 ) { // play / pause
+      automaton.isPlaying ? automaton.pause() : automaton.play();
+    }
   }
 } );
