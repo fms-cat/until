@@ -5,7 +5,7 @@
 2nd Place @ [Tokyo Demo Fest 2018](http://tokyodemofest.jp/2018/), Combined Demo Compo  
 Heavily relied on [Automaton](https://github.com/FMS-Cat/automaton), my own animation engine  
 
-![](https://imgur.com/a/OWt1r1h)
+![](https://i.imgur.com/rvegbWA.jpg)
 
 ## Run
 
