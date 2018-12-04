@@ -46,6 +46,7 @@ if ( !PRODUCTION ) {
   window.divPath = document.createElement( 'div' );
   document.body.appendChild( window.divPath );
   window.divPath.style.position = 'fixed';
+  window.divPath.style.textAlign = 'right';
   window.divPath.style.right = '8px';
   window.divPath.style.bottom = '248px';
   window.divPath.style.textShadow = '1px 1px 1px #ffffff';
@@ -53,7 +54,6 @@ if ( !PRODUCTION ) {
   window.divAutomaton = document.createElement( 'divAutomaton' );
   document.body.appendChild( window.divAutomaton );
   window.divAutomaton.style.position = 'fixed';
-  window.divAutomaton.style.textAlign = 'right';
   window.divAutomaton.style.width = '100%';
   window.divAutomaton.style.height = '240px';
   window.divAutomaton.style.right = 0;
