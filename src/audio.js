@@ -87,6 +87,7 @@ export const Audio = class {
   }
 
   play() {
+    this.audio.resume && this.audio.resume(); // against "no do not generate any sound until your user interacts with gui stuff" policy
     this.isPlaying = true;
     this.currentTimeDate = Date.now();
     this.processor.connect( this.audio.destination );
