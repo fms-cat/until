@@ -1,4 +1,6 @@
 {
   "resolution": [ 1920, 1080 ],
-  "shadowReso": 512
+  "shadowReso": 512,
+  "near": 0.01,
+  "far": 20.0
 }

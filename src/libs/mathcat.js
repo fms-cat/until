@@ -161,7 +161,7 @@ MathCat.mat4Apply = ( ...mat ) => {
   const a = mat[ 0 ];
   const b = mat[ 1 ];
 
-  if ( 3 < mat.length ) {
+  if ( 3 <= mat.length ) {
     const m = mat.slice( 2 );
     return MathCat.mat4Apply( MathCat.mat4Apply( a, b ), ...m );
   }
@@ -395,6 +395,18 @@ MathCat.mat4Perspective = ( fov, near, far ) => {
     0.0, 0.0, ( far + near ) / d, 1.0,
     0.0, 0.0, -2 * far * near / d, 0.0
   ];
+};
+
+MathCat.vec3PosFromViewMatrix = ( matV ) => {
+  const v = MathCat.mat4ApplyToVec4(
+    MathCat.mat4Transpose( matV ),
+    [ -matV[ 12 ], -matV[ 13 ], -matV[ 14 ], 0.0 ]
+  );
+  return [ v[ 0 ], v[ 1 ], v[ 2 ] ];
+};
+
+MathCat.vec3DirFromViewMatrix = ( matV ) => {
+  return [ matV[ 9 ], matV[ 10 ], matV[ 11 ] ];
 };
 
 export default MathCat;

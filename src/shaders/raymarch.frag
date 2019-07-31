@@ -4,7 +4,6 @@
 #define TRACE_ITER 1
 #define MARCH_MUL 0.8
 #define MARCH_ITER 60
-#define RAYLEN_INIT 0.01
 #define INTERSECT_MIN 0.01
 #define MARCH_FAR 20.0
 #define FOV 90.0
@@ -15,11 +14,8 @@ uniform vec4 ifsParams;
 // ------
 
 struct Camera {
-  vec3 pos;
-  vec3 dir;
-  vec3 sid;
-  vec3 top;
-  float fov;
+  mat4 matP;
+  mat4 matV;
 };
 
 struct Ray {
@@ -29,15 +25,10 @@ struct Ray {
 
 // ------
 
-Camera camInit( in vec3 _pos, in vec3 _tar, in float _rot, in float _fov ) {
+Camera camInit( in mat4 _matP, in mat4 _matV ) {
   Camera cam;
-  cam.pos = _pos;
-  cam.dir = normalize( _tar - _pos );
-  cam.sid = normalize( cross( cam.dir, vec3( 0.0, 1.0, 0.0 ) ) );
-  cam.top = normalize( cross( cam.sid, cam.dir ) );
-  cam.sid = cos( _rot ) * cam.sid + sin( _rot ) * cam.top;
-  cam.top = normalize( cross( cam.sid, cam.dir ) );
-  cam.fov = _fov;
+  cam.matP = _matP;
+  cam.matV = _matV;
 
   return cam;
 }
@@ -49,13 +40,15 @@ Ray rayInit( in vec3 _ori, in vec3 _dir ) {
   return ray;
 }
 
-Ray rayFromCam( in vec2 _p, in Camera _cam ) {
-  vec3 dir = normalize(
-    _p.x * _cam.sid
-    + _p.y * _cam.top
-    + _cam.dir / tan( _cam.fov * PI / 360.0 ) // Is this correct?
-  );
-  return rayInit( _cam.pos, dir );
+Ray rayFromCam( in vec2 _uv, in Camera _cam ) {
+  mat4 imat = inverse( _cam.matP * _cam.matV );
+  vec4 near = imat * vec4( 2.0 * _uv - 1.0, 0.0, 1.0 );
+  vec4 far = near + imat[ 2 ];
+  near /= near.w;
+  far /= far.w;
+  vec3 dir = far.xyz - near.xyz;
+  dir.x *= resolution.x / resolution.y;
+  return rayInit( near.xyz, normalize( dir ) );
 }
 
 // ------
@@ -142,17 +135,14 @@ vec3 normalFunc( in vec3 _p, in float _d ) {
 
 void main() {
   vec2 uv = gl_FragCoord.xy / resolution;
-  vec2 p = ( gl_FragCoord.xy * 2.0 - resolution ) / resolution.y;
 
   Camera cam = camInit(
-    isShadow ? lightPos : cameraPos,
-    cameraTar,
-    isShadow ? 0.0 : cameraRoll,
-    perspFov
+    isShadow ? matPL : matP,
+    isShadow ? matVL : matV
   );
-  Ray ray = rayFromCam( p, cam );
+  Ray ray = rayFromCam( uv, cam );
 
-  float rayLen = RAYLEN_INIT;
+  float rayLen = 0.0;
   vec3 rayPos = ray.ori + ray.dir * rayLen;
   vec4 mtl;
 
@@ -170,10 +160,8 @@ void main() {
   if ( abs( dist ) < INTERSECT_MIN ) {
     normal = normalFunc( rayPos, 1E-4 );
 
-    float z = dot( normalize( cameraTar - cam.pos ), rayPos - cam.pos );
-    float a = ( perspFar + perspNear ) / ( perspFar - perspNear );
-    float b = 2.0 * perspFar * perspNear / ( perspFar - perspNear );
-    gl_FragDepthEXT = 0.5 + 0.5 * ( a - b / z );
+    vec4 c = cam.matP * cam.matV * vec4( rayPos, 1.0 );
+    gl_FragDepthEXT = c.z / c.w;
   } else {
     gl_FragDepthEXT = 1.0;
   }

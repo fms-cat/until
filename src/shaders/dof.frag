@@ -1,7 +1,7 @@
 // Ref: https://www.shadertoy.com/view/4d2Xzw
 
-#define FOG_ONE calcDepth(5.0)
-#define FOG_ZERO calcDepth(20.0)
+#define FOG_ONE calcDepth(mix(near,far,0.25))
+#define FOG_ZERO calcDepth(far)
 #define BOKEH_ITER 10
 #define BOKEH_ANGLE 2.39996
 #define BOKEH_RADIUS_MAX (resolution.x / 64.0)

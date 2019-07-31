@@ -34,13 +34,12 @@ float getEdge( vec2 _uv ) {
   vec3 rayDir = normalize( ray );
   float rayLen = length( ray );
 
-  float f = mod( gl_FragCoord.x + gl_FragCoord.y, 2.0 ) < 1.0 ? 1.0 : -1.0;
-  vec4 tex0x = texture2D( sampler0, _uv + vec2( f, 0.0 ) / resolution );
-  vec4 tex0y = texture2D( sampler0, _uv + vec2( 0.0, f ) / resolution );
-  vec4 tex1x = texture2D( sampler1, _uv + vec2( f, 0.0 ) / resolution );
-  vec4 tex1y = texture2D( sampler1, _uv + vec2( 0.0, f ) / resolution );
-  vec4 tex2x = texture2D( sampler2, _uv + vec2( f, 0.0 ) / resolution );
-  vec4 tex2y = texture2D( sampler2, _uv + vec2( 0.0, f ) / resolution );
+  vec4 tex0x = texture2D( sampler0, _uv + vec2( 1.0, 0.0 ) / resolution );
+  vec4 tex0y = texture2D( sampler0, _uv + vec2( 0.0, 1.0 ) / resolution );
+  vec4 tex1x = texture2D( sampler1, _uv + vec2( 1.0, 0.0 ) / resolution );
+  vec4 tex1y = texture2D( sampler1, _uv + vec2( 0.0, 1.0 ) / resolution );
+  vec4 tex2x = texture2D( sampler2, _uv + vec2( 1.0, 0.0 ) / resolution );
+  vec4 tex2y = texture2D( sampler2, _uv + vec2( 0.0, 1.0 ) / resolution );
 
   float validx = tex2.w == tex2x.w ? 1.0 : 0.0;
   float validy = tex2.w == tex2y.w ? 1.0 : 0.0;

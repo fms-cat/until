@@ -49,5 +49,5 @@ void main() {
     outPos.x /= resolution.x / resolution.y;
   }
   gl_Position = outPos;
-  gl_PointSize = resolution.y * size / outPos.z / tan( perspFov * PI / 360.0 );
+  gl_PointSize = resolution.y * size / outPos.z / matP[ 0 ].x;
 }

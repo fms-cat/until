@@ -6,9 +6,6 @@ export default ( context ) => {
   const glCat = glCatPath.glCat;
   const gl = glCat.gl;
 
-  const width = context.width;
-  const height = context.height;
-
   const auto = context.automaton.auto;
 
   // == hi vbo =================================================================
@@ -17,10 +14,8 @@ export default ( context ) => {
   // == path definition begin ==================================================
   glCatPath.add( {
     dof: {
-      width: width,
-      height: height,
       vert: require( '../shaders/quad.vert' ),
-      frag: require( '../shaders/dof.frag' ),
+      frag: context.isVR ? require( '../shaders/dof-vr.frag' ) : require( '../shaders/dof.frag' ),
       blend: [ gl.ONE, gl.ZERO ],
       clear: [ 0.0, 0.0, 0.0, 0.0 ],
       framebuffer: true,
@@ -41,13 +36,14 @@ export default ( context ) => {
     module.hot.accept(
       [
         '../shaders/quad.vert',
-        '../shaders/dof.frag'
+        '../shaders/dof.frag',
+        '../shaders/dof-vr.frag',
       ],
       () => {
         glCatPath.replaceProgram(
           'dof',
           require( '../shaders/quad.vert' ),
-          require( '../shaders/dof.frag' )
+          context.isVR ? require( '../shaders/dof-vr.frag' ) : require( '../shaders/dof.frag' )
         );
       }
     );

@@ -17,6 +17,7 @@
     "url-loader": "^1.0.1",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.9"
+    "webpack-dev-server": "^3.1.9",
+    "webxr-polyfill": "^1.0.13"
   }
 }

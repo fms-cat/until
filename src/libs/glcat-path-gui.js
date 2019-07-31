@@ -42,8 +42,6 @@ let PathGUI = class extends Path {
     let vboQuad = glCat.createVertexbuffer( new Float32Array( [ -1, -1, 1, -1, -1, 1, 1, 1 ] ) );
     it.add( {
       __PathGuiReturn: {
-        width: it.params.canvas.width,
-        height: it.params.canvas.height,
         vert: 'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}',
         frag: 'precision highp float;uniform vec2 r;uniform sampler2D s;void main(){gl_FragColor=texture2D(s,gl_FragCoord.xy/r);}',
         blend: [ gl.ONE, gl.ONE ],

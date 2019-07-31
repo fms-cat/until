@@ -6,17 +6,12 @@ export default ( context ) => {
   const glCat = glCatPath.glCat;
   const gl = glCat.gl;
 
-  const width = context.width;
-  const height = context.height;
-
   // == hi vbo =================================================================
   const vboQuad = glCat.createVertexbuffer( new Float32Array( UltraCat.triangleStripQuad ) );
 
   // == path definition begin ==================================================
   glCatPath.add( {
     render: {
-      width: width,
-      height: height,
       vert: require( '../shaders/quad.vert' ),
       frag: require( '../shaders/render.frag' ),
       blend: [ gl.ONE, gl.ZERO ],

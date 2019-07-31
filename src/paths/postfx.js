@@ -7,9 +7,6 @@ export default ( context ) => {
   const glCat = glCatPath.glCat;
   const gl = glCat.gl;
 
-  const width = context.width;
-  const height = context.height;
-
   const auto = context.automaton.auto;
 
   // ------
@@ -20,10 +17,8 @@ export default ( context ) => {
 
   glCatPath.add( {
     post: {
-      width: width,
-      height: height,
       vert: require( '../shaders/quad.vert' ),
-      frag: require( '../shaders/post.frag' ),
+      frag: ( context.isVR ? '#define VR\n' : '' ) + require( '../shaders/post.frag' ),
       blend: [ gl.ONE, gl.ZERO ],
       clear: [ 0.0, 0.0, 0.0, 0.0 ],
       framebuffer: true,
@@ -38,8 +33,6 @@ export default ( context ) => {
     },
 
     glitch: {
-      width: width,
-      height: height,
       vert: require( '../shaders/quad.vert' ),
       frag: require( '../shaders/glitch.frag' ),
       blend: [ gl.ONE, gl.ZERO ],
@@ -56,8 +49,6 @@ export default ( context ) => {
     },
 
     fxaa: {
-      width: width,
-      height: height,
       vert: require( '../shaders/quad.vert' ),
       frag: require( '../shaders/fxaa.frag' ),
       blend: [ gl.ONE, gl.ZERO ],

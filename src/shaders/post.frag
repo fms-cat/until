@@ -25,6 +25,9 @@ void main() {
   // == glitch =================================================================
   vec3 tex = vec3( 0.0 );
 
+#ifdef VR
+  tex = texture2D( sampler0, uv ).xyz;
+#else
   // == do barrel distortion ===================================================
   for ( int i = 0; i < BARREL_ITER; i ++ ) {
     float fi = ( float( i ) + 0.5 ) / float( BARREL_ITER );
@@ -39,6 +42,7 @@ void main() {
   // == do vignette ============================================================
   float vig = 1.0 - length( p ) * 0.4;
   tex = mix( vec3( 0.0 ), tex, vig );
+#endif
 
   // == do color correction ====================================================
   vec3 col = pow( saturate( tex.xyz ), vec3( 1.0 / 1.6 ) );
