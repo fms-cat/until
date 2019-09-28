@@ -62,6 +62,7 @@ uniform sampler2D samplerRandomDynamic;
 uniform vec2 zOffset;
 uniform vec2 mouse;
 uniform vec3 bgColor;
+uniform vec4 viewport;
 
 // == prng =====================================================================
 float prng(inout vec4 n)

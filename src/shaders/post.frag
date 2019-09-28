@@ -1,4 +1,4 @@
-#define BARREL_ITER 10
+#define BARREL_ITER 100
 
 // == uniforms =================================================================
 uniform float barrelAmp;
@@ -6,21 +6,24 @@ uniform float barrelOffset;
 uniform sampler2D sampler0;
 
 // == distort a coordination and sample a texture ==============================
-vec3 barrel( float amp, vec2 uv ) {
+vec3 barrel( float amp, vec2 uv, vec2 puv ) {
   float corn = length( vec2( 0.5 ) );
   float a = min( 3.0 * sqrt( amp ), corn * PI );
   float zoom = corn / ( tan( corn * a ) + corn );
   vec2 p = saturate(
-    ( uv + normalize( uv - 0.5 ) * tan( length( uv - 0.5 ) * a ) ) * zoom +
+    ( puv + normalize( puv - 0.5 ) * tan( length( puv - 0.5 ) * a ) ) * zoom +
     0.5 * ( 1.0 - zoom )
   );
+  p = ( p - viewport.xy ) / viewport.zw;
   return texture2D( sampler0, vec2( p.x, p.y ) ).xyz;
 }
 
 // == main =====================================================================
 void main() {
   vec2 uv = gl_FragCoord.xy / resolution;
-  vec2 p = ( gl_FragCoord.xy * 2.0 - resolution ) / resolution.y;
+
+  vec2 puv = viewport.xy + uv * viewport.zw;
+  vec2 p = ( puv * resolution * 2.0 - resolution ) / resolution.y;
 
   // == glitch =================================================================
   vec3 tex = vec3( 0.0 );
@@ -33,7 +36,7 @@ void main() {
       1.0 - 3.0 * abs( 1.0 / 2.0 - fi ),
       1.0 - 3.0 * abs( 5.0 / 6.0 - fi )
     ) ) / float( BARREL_ITER ) * 4.0;
-    tex += a * barrel( barrelOffset + barrelAmp * fi, uv );
+    tex += a * barrel( barrelOffset + barrelAmp * fi, uv, puv );
   }
 
   // == do vignette ============================================================

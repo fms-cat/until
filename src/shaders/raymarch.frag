@@ -142,7 +142,9 @@ vec3 normalFunc( in vec3 _p, in float _d ) {
 
 void main() {
   vec2 uv = gl_FragCoord.xy / resolution;
-  vec2 p = ( gl_FragCoord.xy * 2.0 - resolution ) / resolution.y;
+  uv = viewport.xy + uv * viewport.zw;
+
+  vec2 p = ( uv * resolution * 2.0 - resolution ) / resolution.y;
 
   Camera cam = camInit(
     isShadow ? lightPos : cameraPos,
